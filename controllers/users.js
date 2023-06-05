@@ -12,7 +12,45 @@ const getUser = (req, res) => {
     .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
 };
 
+const createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
+    .then((user) => res.send({ data: user }))
+    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+};
+
+const updateUserInfo = (req, res) => {
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+    .then((newData) => res.send({ data: newData }))
+    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+};
+
+const updateAvatar = (req, res) => {
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+    .then((newAvatar) => res.send({ data: newAvatar }))
+    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+}
+
 module.exports = {
   getUsers,
   getUser,
+  createUser,
+  updateUserInfo,
+  updateAvatar
 };
