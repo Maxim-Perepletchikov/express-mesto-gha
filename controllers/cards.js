@@ -1,4 +1,5 @@
 const Card = require("../models/card");
+const ERROR = require("../constants/constants");
 
 const getCards = (req, res) => {
   Card.find({})
@@ -11,15 +12,26 @@ const createCard = (req, res) => {
   const { _id } = req.user;
   Card.create({ name, link, owner: _id })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch((err) => {
+      if (err.name === "ValidationError")
+        return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Переданы некорректные данные" });
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 const deleteCard = (req, res) => {
-  const { name, about } = req.body;
   const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId, { name, about })
+  Card.findByIdAndRemove(cardId)
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch((err) => {
+      if (err.name === "CastError")
+        return res
+          .status(ERROR.NOT_FOUND)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 const addLike = (req, res) => {
@@ -29,8 +41,10 @@ const addLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .then((likes) => res.send({ data: likes }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .then((card) => res.send({ data: card }))
+    .catch(() =>
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
+    );
 };
 
 const deleteLike = (req, res) => {
@@ -40,8 +54,10 @@ const deleteLike = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .then((likes) => res.send({ data: likes }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .then((card) => res.send({ data: card }))
+    .catch(() =>
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
+    );
 };
 
 module.exports = {

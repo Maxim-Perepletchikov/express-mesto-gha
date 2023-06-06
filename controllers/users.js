@@ -1,22 +1,37 @@
 const User = require("../models/user");
+const ERROR = require("../constants/constants");
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.send(users))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .then((users) => res.send({ data: users }))
+    .catch(() =>
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
+    );
 };
 
 const getUser = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => res.send(user))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.name === "CastError")
+        return res
+          .status(ERROR.NOT_FOUND)
+          .send({ message: "Запрашиваемый пользователь не найден" });
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch((err) => {
+      if (err.name === "ValidationError")
+        return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Переданы некорректные данные" });
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 const updateUserInfo = (req, res) => {
@@ -30,7 +45,13 @@ const updateUserInfo = (req, res) => {
     }
   )
     .then((newData) => res.send({ data: newData }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch((err) => {
+      if (err.name === "ValidationError")
+        return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Переданы некорректные данные" });
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 const updateAvatar = (req, res) => {
@@ -44,7 +65,9 @@ const updateAvatar = (req, res) => {
     }
   )
     .then((newAvatar) => res.send({ data: newAvatar }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch(() =>
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
+    );
 };
 
 module.exports = {
