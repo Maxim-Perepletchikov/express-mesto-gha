@@ -45,12 +45,12 @@ const updateAvatar = (req, res) => {
   )
     .then((newAvatar) => res.send({ data: newAvatar }))
     .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
-}
+};
 
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUserInfo,
-  updateAvatar
+  updateAvatar,
 };
