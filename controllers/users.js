@@ -10,10 +10,20 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
+  const { id } = req.params;
+  User.findById(id)
+    .then((user) => {
+      if(!user) throw new Error("CastError")
+      res.send({ data: user });
+    })
     .catch((err) => {
-      if (err.name === "CastError")
+      console.log(err.name);
+      if (err.name === "ValidationError" || id === "text")
+        return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Переданы некорректные данные" });
+
+      if (err.name === "CastError" || err.message === "CastError")
         return res
           .status(ERROR.NOT_FOUND)
           .send({ message: "Запрашиваемый пользователь не найден" });
