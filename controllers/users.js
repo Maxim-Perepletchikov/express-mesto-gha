@@ -13,17 +13,17 @@ const getUser = (req, res) => {
   const { id } = req.params;
   User.findById(id)
     .then((user) => {
-      if(!user) throw new Error("CastError")
+      if(!user) throw new Error("NotFound")
       res.send({ data: user });
     })
     .catch((err) => {
-      console.log(err.name);
-      if (err.name === "ValidationError" || id === "text")
+      console.log(err.name, err.message);
+      if (err.name === "ValidationError"/*  || id === "text" */ || err.name === "CastError")
         return res
           .status(ERROR.BAD_REQUEST)
           .send({ message: "Переданы некорректные данные" });
 
-      if (err.name === "CastError" || err.message === "CastError")
+      if (err.message === "NotFound")
         return res
           .status(ERROR.NOT_FOUND)
           .send({ message: "Запрашиваемый пользователь не найден" });

@@ -24,12 +24,20 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) throw new Error("NotFound");
+      res.send({ data: card });
+    })
     .catch((err) => {
       if (err.name === "CastError")
         return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      if (err.message === "NotFound") {
+        return res
           .status(ERROR.NOT_FOUND)
           .send({ message: "Запрашиваемая карточка не найдена" });
+      }
       res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
     });
 };
@@ -41,10 +49,22 @@ const addLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .then((card) => res.send({ data: card }))
-    .catch(() =>
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
-    );
+    .then((card) => {
+      if (!card) throw new Error("NotFound");
+      res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === "CastError")
+        return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Переданы некорректные данные" });
+      if (err.message === "NotFound") {
+        return res
+          .status(ERROR.NOT_FOUND)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      }
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 const deleteLike = (req, res) => {
@@ -54,10 +74,22 @@ const deleteLike = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .then((card) => res.send({ data: card }))
-    .catch(() =>
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
-    );
+    .then((card) => {
+      if (!card) throw new Error("NotFound");
+      res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === "CastError")
+        return res
+          .status(ERROR.BAD_REQUEST)
+          .send({ message: "Переданы некорректные данные" });
+      if (err.message === "NotFound") {
+        return res
+          .status(ERROR.NOT_FOUND)
+          .send({ message: "Запрашиваемая карточка не найдена" });
+      }
+      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+    });
 };
 
 module.exports = {
