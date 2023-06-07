@@ -1,32 +1,33 @@
-const User = require("../models/user");
-const ERROR = require("../constants/constants");
+const User = require('../models/user');
+const ERROR = require('../constants/constants');
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() =>
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
-    );
+    .catch(() => {
+      res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
+    });
 };
 
 const getUser = (req, res) => {
   const { id } = req.params;
   User.findById(id)
     .then((user) => {
-      if(!user) throw new Error("NotFound")
+      if (!user) throw new Error('NotFound');
       res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "ValidationError" || err.name === "CastError")
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         return res
           .status(ERROR.BAD_REQUEST)
-          .send({ message: "Переданы некорректные данные" });
-
-      if (err.message === "NotFound")
+          .send({ message: 'Переданы некорректные данные' });
+      }
+      if (err.message === 'NotFound') {
         return res
           .status(ERROR.NOT_FOUND)
-          .send({ message: "Запрашиваемый пользователь не найден" });
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+          .send({ message: 'Запрашиваемый пользователь не найден' });
+      }
+      return res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -35,11 +36,12 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === "ValidationError")
+      if (err.name === 'ValidationError') {
         return res
           .status(ERROR.BAD_REQUEST)
-          .send({ message: "Переданы некорректные данные" });
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+          .send({ message: 'Переданы некорректные данные' });
+      }
+      return res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -51,15 +53,16 @@ const updateUserInfo = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((newData) => res.send({ data: newData }))
     .catch((err) => {
-      if (err.name === "ValidationError")
+      if (err.name === 'ValidationError') {
         return res
           .status(ERROR.BAD_REQUEST)
-          .send({ message: "Переданы некорректные данные" });
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" });
+          .send({ message: 'Переданы некорректные данные' });
+      }
+      return res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -71,12 +74,12 @@ const updateAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((newAvatar) => res.send({ data: newAvatar }))
-    .catch(() =>
-      res.status(ERROR.DEFAULT_ERROR).send({ message: "Произошла ошибка" })
-    );
+    .catch(() => {
+      res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports = {

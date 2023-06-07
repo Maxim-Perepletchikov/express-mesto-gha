@@ -13,18 +13,22 @@
     "url": "git+https://github.com/Maxim-Perepletchikov/express-mesto-gha.git"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Maxim Perepletchikov",
+    "email": "MaxWell-38@yandex.ru"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Maxim-Perepletchikov/express-mesto-gha/issues"
   },
   "homepage": "https://github.com/Maxim-Perepletchikov/express-mesto-gha#readme",
   "dependencies": {
-    "eslint": "^8.41.0",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
     "mongoose": "^7.2.2"
   },
   "devDependencies": {
+    "eslint": "^8.42.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
     "nodemon": "^2.0.22"
