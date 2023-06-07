@@ -17,8 +17,7 @@ const getUser = (req, res) => {
       res.send({ data: user });
     })
     .catch((err) => {
-      console.log(err.name, err.message);
-      if (err.name === "ValidationError"/*  || id === "text" */ || err.name === "CastError")
+      if (err.name === "ValidationError" || err.name === "CastError")
         return res
           .status(ERROR.BAD_REQUEST)
           .send({ message: "Переданы некорректные данные" });
