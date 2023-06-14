@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-unresolved
 const rateLimit = require('express-rate-limit');
 const router = require('./routes');
 
