@@ -24,11 +24,22 @@ const createCard = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId)
+
+  Card.findById(cardId)
+    .populate('owner')
     .then((card) => {
       if (!card) throw new Error('NotFound');
-      res.send({ data: card });
+      if (req.user._id !== card.owner.id) {
+        throw new Error('NotFound');
+      }
+      Card.findByIdAndRemove(cardId)
+        .then((cardDel) => {
+          res.send({ data: cardDel });
+        });
+
+      // return res.send({});
     })
+
     .catch((err) => {
       if (err.name === 'CastError') {
         return res

@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-unresolved
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 const router = require('./routes');
 
 const { PORT = 3000 } = process.env;
@@ -19,16 +19,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 });
 
 app.use(limiter);
-
 app.use(express.json());
-
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5d8b8592978f8bd833ca8133',
-  };
-
-  next();
-});
+app.use(cookieParser());
 
 app.use(router);
 
