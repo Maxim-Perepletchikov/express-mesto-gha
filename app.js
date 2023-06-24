@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const router = require('./routes');
+const { errorHandler } = require('./middlewares/error');
 
 const { PORT = 3000 } = process.env;
 const limiter = rateLimit({
@@ -23,6 +24,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(router);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
