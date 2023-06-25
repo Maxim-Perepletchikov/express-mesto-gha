@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 const router = require('./routes');
 const { errorHandler } = require('./middlewares/error');
 
@@ -24,6 +25,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(router);
+
+app.use(errors());
 
 app.use(errorHandler);
 
