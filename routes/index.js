@@ -15,7 +15,12 @@ router.post('/signup', celebrate({
   }),
 }), createUser);
 
-router.post('/signin', login);
+router.post('/signin', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().regex(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+  }),
+}), login);
 
 router.use(auth);
 
