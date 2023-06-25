@@ -1,8 +1,8 @@
-class UserNotFound extends Error {
+class NotFoundError extends Error {
   constructor(err) {
     super(err);
     this.statusCode = 404;
   }
 }
 
-module.exports = UserNotFound;
+module.exports = NotFoundError;

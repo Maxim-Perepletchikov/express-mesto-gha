@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
 // const ERROR = require('../constants/constants');
-const UserNotFound = require('../errors/UserNotFound');
+const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const EmailError = require('../errors/EmailError');
 const AuthorizationError = require('../errors/AuthorizationError');
@@ -19,7 +19,7 @@ const getUser = (req, res, next) => {
   const { id } = req.params;
   User.findById(id)
     .then((user) => {
-      if (!user) throw new UserNotFound('Пользователь не найден');
+      if (!user) throw new NotFoundError('Пользователь не найден');
       res.send({ data: user });
     })
     .catch((err) => {
@@ -47,7 +47,7 @@ const getCurrentUser = (req, res, next) => {
 
   User.findById(id)
     .then((user) => {
-      if (!user) throw new UserNotFound('Пользователь не найден');
+      if (!user) throw new NotFoundError('Пользователь не найден');
       res.send({ data: user });
     })
     .catch(next);/* (err) => {
