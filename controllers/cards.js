@@ -38,23 +38,9 @@ const deleteCard = (req, res, next) => {
         .then((cardDel) => {
           res.send({ data: cardDel });
         });
-
-      // return res.send({});
     })
 
-    .catch(next);/* (err) => {
-      if (err.name === 'CastError') {
-        return res
-          .status(ERROR.BAD_REQUEST)
-          .send({ message: 'Запрашиваемая карточка не найдена' });
-      }
-      if (err.message === 'NotFound') {
-        return res
-          .status(ERROR.NOT_FOUND)
-          .send({ message: 'Запрашиваемая карточка не найдена' });
-      }
-      return res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
-    }); */
+    .catch(next);
 };
 
 const addLike = (req, res, next) => {
@@ -74,19 +60,7 @@ const addLike = (req, res, next) => {
         return;
       }
       next(err);
-    });/* (err) => {
-      if (err.name === 'CastError') {
-        return res
-          .status(ERROR.BAD_REQUEST)
-          .send({ message: 'Переданы некорректные данные' });
-      }
-      if (err.message === 'NotFound') {
-        return res
-          .status(ERROR.NOT_FOUND)
-          .send({ message: 'Запрашиваемая карточка не найдена' });
-      }
-      return res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
-    }); */
+    });
 };
 
 const deleteLike = (req, res, next) => {
@@ -106,17 +80,6 @@ const deleteLike = (req, res, next) => {
         return;
       }
       next(err);
-      // if (err.name === 'CastError') {
-      //   return res
-      //     .status(ERROR.BAD_REQUEST)
-      //     .send({ message: 'Переданы некорректные данные' });
-      // }
-      // if (err.message === 'NotFound') {
-      //   return res
-      //     .status(ERROR.NOT_FOUND)
-      //     .send({ message: 'Запрашиваемая карточка не найдена' });
-      // }
-      // return res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 

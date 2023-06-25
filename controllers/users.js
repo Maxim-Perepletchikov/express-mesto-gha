@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
-// const ERROR = require('../constants/constants');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const EmailError = require('../errors/EmailError');
@@ -10,9 +9,7 @@ const AuthorizationError = require('../errors/AuthorizationError');
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(next);/* () => {
-      res.status(ERROR.DEFAULT_ERROR).send({ message: 'Произошла ошибка' });
-    }); */
+    .catch(next);
 };
 
 const getUser = (req, res, next) => {
@@ -24,20 +21,9 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        /* return res
-          .status(ERROR.BAD_REQUEST)
-          .send({ message: 'Переданы некорректные данные' }); */
         next(new ValidationError('Переданы некорректные данные'));
         return;
       }
-      /* if (err.message === 'NotFound') {
-        return res
-          .status(ERROR.NOT_FOUND)
-          .send({ message: 'Запрашиваемый пользователь не найден' });
-      }
-      return res
-        .status(ERROR.DEFAULT_ERROR)
-        .send({ message: 'Произошла ошибка' }); */
       next(err);
     });
 };
@@ -50,21 +36,7 @@ const getCurrentUser = (req, res, next) => {
       if (!user) throw new NotFoundError('Пользователь не найден');
       res.send({ data: user });
     })
-    .catch(next);/* (err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return res
-          .status(ERROR.BAD_REQUEST)
-          .send({ message: 'Переданы некорректные данные' });
-      }
-      if (err.message === 'NotFound') {
-        return res
-          .status(ERROR.NOT_FOUND)
-          .send({ message: 'Запрашиваемый пользователь не найден' });
-      }
-      return res
-        .status(ERROR.DEFAULT_ERROR)
-        .send({ message: 'Произошла ошибка' });
-    }); */
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
