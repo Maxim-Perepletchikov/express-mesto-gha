@@ -1,7 +1,8 @@
 const Card = require('../models/card');
-const ERROR = require('../constants/constants');
+// const ERROR = require('../constants/constants');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const ValidationError = require('../errors/ValidationError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -19,7 +20,7 @@ const createCard = (req, res, next) => {
         next(new ValidationError('Переданы некорректные данные'));
         return;
       }
-      next(err)
+      next(err);
     });
 };
 
@@ -73,7 +74,7 @@ const addLike = (req, res, next) => {
         return;
       }
       next(err);
-    })/* (err) => {
+    });/* (err) => {
       if (err.name === 'CastError') {
         return res
           .status(ERROR.BAD_REQUEST)
@@ -104,7 +105,7 @@ const deleteLike = (req, res, next) => {
         next(new ValidationError('Переданы некорректные данные'));
         return;
       }
-      next(err)
+      next(err);
       // if (err.name === 'CastError') {
       //   return res
       //     .status(ERROR.BAD_REQUEST)
