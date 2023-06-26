@@ -3,7 +3,7 @@ const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
-const EmailError = require('../errors/EmailError');
+const ConflictError = require('../errors/ConflictError');
 const AuthorizationError = require('../errors/AuthorizationError');
 
 const getUsers = (req, res, next) => {
@@ -54,7 +54,7 @@ const createUser = (req, res, next) => {
     }))
     .then((user) => {
       const { password: _, ...userNoPass } = user.toObject();
-      res.send({ data: userNoPass });
+      res.status(201).send({ data: userNoPass });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -62,7 +62,8 @@ const createUser = (req, res, next) => {
         return;
       }
       if (err.code === 11000) {
-        next(new EmailError('Пользователь с таким email уже существует'));
+        next(new ConflictError('Пользователь с таким email уже существует'));
+        return;
       }
 
       next(err);
@@ -114,6 +115,7 @@ const updateUserInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные'));
+        return;
       }
       next();
     });
