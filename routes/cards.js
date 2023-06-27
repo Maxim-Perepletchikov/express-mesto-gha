@@ -7,13 +7,14 @@ const {
   addLike,
   deleteLike,
 } = require('../controllers/cards');
+const { LINK_REGEX } = require('../utils/constants');
 
 cardRouter.get('/cards', getCards);
 
 cardRouter.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().required().regex(/^https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/i),
+    link: Joi.string().required().regex(LINK_REGEX),
   }),
 }), createCard);
 

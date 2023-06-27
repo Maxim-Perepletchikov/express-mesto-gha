@@ -5,12 +5,13 @@ const auth = require('../middlewares/auth');
 const userRoutes = require('./users');
 const cardRoutes = require('./cards');
 const NotFoundError = require('../errors/NotFoundError');
+const { LINK_REGEX } = require('../utils/constants');
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/i),
+    avatar: Joi.string().regex(LINK_REGEX),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
